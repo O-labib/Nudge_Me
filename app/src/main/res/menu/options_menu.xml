@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/clear"
+        android:icon="@drawable/ic_clear_all"
+        android:title="@string/menu_clear_all"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/showStatus"
+        android:title="@string/menu_show_status"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/activateService"
+        android:title="@string/menu_activate"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/dectivateService"
+        android:title="@string/menu_deactivate"
+        app:showAsAction="never" />
+
+
+</menu>

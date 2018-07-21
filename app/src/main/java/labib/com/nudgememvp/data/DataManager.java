@@ -1,4 +1,7 @@
 package labib.com.nudgememvp.data;
 
-public interface DataManager {
+import labib.com.nudgememvp.data.db.DatabaseHelper;
+
+public interface DataManager extends DatabaseHelper {
+
 }

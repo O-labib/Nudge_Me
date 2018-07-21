@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
 import labib.com.nudgememvp.data.DataManager;
+import labib.com.nudgememvp.ui.main.Adapter;
 import labib.com.nudgememvp.ui.main.MainContract;
 import labib.com.nudgememvp.ui.main.MainPresenter;
 
@@ -24,5 +25,11 @@ public class ActivityModule {
     @PerActivity
     MainContract.Presenter provideMainPresenter(DataManager dataManager) {
         return new MainPresenter(dataManager);
+    }
+
+    @Provides
+    @PerActivity
+    Adapter provideAdapter() {
+        return new Adapter();
     }
 }
