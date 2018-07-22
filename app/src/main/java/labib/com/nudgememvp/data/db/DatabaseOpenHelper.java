@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+
 import labib.com.nudgememvp.Logy;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
@@ -83,14 +85,22 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     }
 
     // get all notices
-    Cursor getAllData() {
+    ArrayList<Nudge> getAllData() {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String[] coloms = {Col_2, Col_3, Col_4, Col_5, Col_6};
         Cursor cursor = db.query(Table_Name,
                 null, null, null, null, null, null);
 
-        return cursor;
+        ArrayList<Nudge> nudges = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            nudges.add(new Nudge(cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getDouble(3),
+                    cursor.getDouble(4),
+                    cursor.getLong(5)));
+        }
+        return nudges;
     }
 }

@@ -3,7 +3,6 @@ package labib.com.nudgememvp.ui.main;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,14 +18,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import labib.com.nudgememvp.Logy;
 import labib.com.nudgememvp.R;
+import labib.com.nudgememvp.data.db.Nudge;
 import labib.com.nudgememvp.ui.base.BaseActivity;
+import labib.com.nudgememvp.ui.base.BaseDialog;
+import labib.com.nudgememvp.ui.main.inputFragment.InputFragment;
 
-public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, Adapter.Callback, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class MainActivity extends BaseActivity<MainContract.Presenter> implements
+        MainContract.View, Adapter.Callback, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,BaseDialog.Callback {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -43,9 +49,9 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     @Inject
     FragmentManager fragmentManager;
 
+    Snackbar snackbar;
     ItemTouchHelper.SimpleCallback recyclerItemTouchHelper;
 
-    // wire the menu file
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -53,7 +59,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         return true;
     }
 
-    // handle on menu item click
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -99,28 +104,29 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @OnClick(R.id.newNudgeFAB)
     public void newNudge() {
-//        InputFragment.newInstance().show(fragmentManager);
-        getPresenter().insertData();
+        InputFragment.newInstance().show(fragmentManager);
+        //   getPresenter().insertData();
 
     }
 
 
     @Override
-    public void initRecyclerView(Cursor cursor) {
+    public void initRecyclerView(ArrayList<Nudge> data) {
         adapter.setCallBack(this);
-        adapter.setDataCursor(cursor);
+        adapter.setData(data);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
-    public void updateRecyclerView(Cursor cursor) {
-        adapter.swapCursor(cursor);
+    public void updateRecyclerView(ArrayList<Nudge> data) {
+        adapter.swapData(data);
     }
+
 
     @Override
     public void onItemClicked(long id) {
-        getPresenter().deleteOne(id);
+        //  getPresenter().deleteOne(id);
     }
 
     @Override
@@ -138,32 +144,47 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
 
     @Override
-    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, int position) {
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, final int position) {
+        if (snackbar != null && snackbar.isShown()) {
+            new Logy("Shown");
+            snackbar.dismiss();
+            new Logy("dismiss upp");
+        }
 
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, "has removed", Snackbar.LENGTH_LONG);
+        new Logy("here up ----");
+        adapter.removeItem(position);
+
+        final Nudge nudge = (Nudge) viewHolder.itemView.getTag();
+        snackbar = Snackbar.make(coordinatorLayout, "A nudge has been removed", Snackbar.LENGTH_LONG);
+
+        final Snackbar.Callback callback = new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                new Logy("dismissed");
+                getPresenter().deleteOne(((Nudge) viewHolder.itemView.getTag()).getId());
+            }
+
+            @Override
+            public void onShown(Snackbar sb) {
+            }
+        };
+        snackbar.addCallback(callback);
+
         snackbar.setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // undo is selected, restore the deleted item
-                getPresenter().queryData();
-            }
-        });
-
-        snackbar.addCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                //         getPresenter().deleteOne((Long) viewHolder.itemView.getTag());
-
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-
+                adapter.restoreItem(nudge, position);
+                snackbar.removeCallback(callback);
             }
         });
         snackbar.setActionTextColor(Color.YELLOW);
         snackbar.show();
 
+    }
+
+    @Override
+    public void onFragmentDetached(String tag) {
+        getPresenter().queryData();
     }
 }

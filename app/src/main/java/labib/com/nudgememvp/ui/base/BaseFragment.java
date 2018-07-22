@@ -76,6 +76,12 @@ abstract public class BaseFragment<T extends BaseMvpPresenter> extends android.s
         return mPresenter;
     }
 
+    @Override
+    public void showMessage(String s) {
+        if (mActivity != null) {
+            mActivity.showMessage(s);
+        }
+    }
 
     protected abstract int getContentResource();
 

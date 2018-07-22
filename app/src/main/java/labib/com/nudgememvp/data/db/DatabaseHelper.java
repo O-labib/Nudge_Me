@@ -1,13 +1,12 @@
 package labib.com.nudgememvp.data.db;
 
-import android.database.Cursor;
+import java.util.ArrayList;
 
 public interface DatabaseHelper {
 
-    long insertData();
+    long insertData(String message, String place, double lat, double lon);
 
-    Cursor getAllData();
-
+    ArrayList<Nudge> getAllData();
 
     void clearAllData();
 

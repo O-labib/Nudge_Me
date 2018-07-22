@@ -1,8 +1,9 @@
 package labib.com.nudgememvp.data;
 
-import android.database.Cursor;
+import java.util.ArrayList;
 
 import labib.com.nudgememvp.data.db.AppDatabaseHelper;
+import labib.com.nudgememvp.data.db.Nudge;
 
 public class AppDataManager implements DataManager {
 
@@ -13,12 +14,12 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public long insertData() {
-        return appDatabaseHelper.insertData();
+    public long insertData(String message, String place, double lat, double lon) {
+        return appDatabaseHelper.insertData(message, place, lat, lon);
     }
 
     @Override
-    public Cursor getAllData() {
+    public ArrayList<Nudge> getAllData() {
         return appDatabaseHelper.getAllData();
     }
 

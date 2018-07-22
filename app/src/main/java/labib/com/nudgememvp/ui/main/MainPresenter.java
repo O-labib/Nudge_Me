@@ -1,8 +1,9 @@
 package labib.com.nudgememvp.ui.main;
 
-import android.database.Cursor;
+import java.util.ArrayList;
 
 import labib.com.nudgememvp.data.DataManager;
+import labib.com.nudgememvp.data.db.Nudge;
 import labib.com.nudgememvp.ui.base.BasePresenter;
 
 public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter {
@@ -13,7 +14,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
     @Override
     public void insertData() {
-        long result = getDataManager().insertData();
+        long result = getDataManager().insertData("omar","labib",20,20);
         if (result != -1) {
             queryData();
         }
@@ -22,14 +23,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
     @Override
     public void queryData() {
-        Cursor cursor = getDataManager().getAllData();
-        getView().updateRecyclerView(cursor);
+        ArrayList<Nudge> data = getDataManager().getAllData();
+        getView().updateRecyclerView(data);
     }
 
     @Override
     public void queryInitialData() {
-        Cursor cursor = getDataManager().getAllData();
-        getView().initRecyclerView(cursor);
+        ArrayList<Nudge> data = getDataManager().getAllData();
+        getView().initRecyclerView(data);
     }
 
     @Override

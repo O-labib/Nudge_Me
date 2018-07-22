@@ -1,19 +1,19 @@
 package labib.com.nudgememvp.ui.main;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import labib.com.nudgememvp.R;
-import labib.com.nudgememvp.data.db.DatabaseOpenHelper;
+import labib.com.nudgememvp.data.db.Nudge;
 import labib.com.nudgememvp.ui.base.BaseViewHolder;
 import labib.com.nudgememvp.utils.TimeUtils;
 
@@ -24,31 +24,23 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
     private static final int VIEW_TYPE_EMPTY = 0;
 
 
-    private Cursor dataCursor;
+    private ArrayList<Nudge> data;
     private Callback mCallBack;
 
-    private int COLUMN_ID;
-    private int COLUMN_MESSAGE;
-    private int COLUMN_PLACE;
-    private int COLUMN_TIME;
+
 
     public void setCallBack(Callback callBack) {
         mCallBack = callBack;
     }
 
-    public void setDataCursor(Cursor dataCursor) {
-        this.dataCursor = dataCursor;
-
-        COLUMN_ID = dataCursor.getColumnIndex(DatabaseOpenHelper.Col_1);
-        COLUMN_MESSAGE = dataCursor.getColumnIndex(DatabaseOpenHelper.Col_2);
-        COLUMN_PLACE = dataCursor.getColumnIndex(DatabaseOpenHelper.Col_3);
-        COLUMN_TIME = dataCursor.getColumnIndex(DatabaseOpenHelper.Col_6);
+    public void setData(ArrayList<Nudge> data) {
+        this.data = data;
     }
 
     @Override
     public int getItemViewType(int position) {
 
-        if (dataCursor != null && dataCursor.getCount() > 0) {
+        if (data != null && data.size() > 0) {
             return VIEW_TYPE_NORMAL;
         } else {
             return VIEW_TYPE_EMPTY;
@@ -72,29 +64,33 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-        if (!dataCursor.moveToPosition(position)) {
-            return;
-        }
-
         holder.onBind(position);
     }
 
     @Override
     public int getItemCount() {
-        if (dataCursor != null && dataCursor.getCount() > 0) {
-            return dataCursor.getCount();
+        if (data != null && data.size() > 0) {
+            return data.size();
         } else {
             return 1;
         }
     }
 
-    void swapCursor(Cursor cursor) {
-        if (cursor != null) {
-            dataCursor.moveToPosition(2);
-            dataCursor = null;
-            dataCursor = cursor;
+    void swapData(ArrayList<Nudge> data) {
+        if (data != null) {
+            this.data = data;
             notifyDataSetChanged();
         }
+    }
+
+    public void removeItem(int position) {
+        data.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Nudge nudge, int position) {
+        data.add(position, nudge);
+        notifyItemInserted(position);
     }
 
     public interface Callback {
@@ -133,12 +129,12 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onBind(int position) {
             super.onBind(position);
 
-            nudgeTV.setText(dataCursor.getString(COLUMN_MESSAGE));
-            placeTV.setText((dataCursor.getString(COLUMN_PLACE)));
-            timeTV.setText(TimeUtils.dateToReadable(dataCursor.getLong(COLUMN_TIME)));
-            dateTV.setText((TimeUtils.timeToReadable(dataCursor.getLong(COLUMN_TIME))));
+            nudgeTV.setText(data.get(position).getMessage());
+            placeTV.setText(data.get(position).getPlaceName());
+            timeTV.setText(TimeUtils.dateToReadable(data.get(position).getTime()));
+            dateTV.setText((TimeUtils.timeToReadable(data.get(position).getTime())));
 
-            itemView.setTag(dataCursor.getLong(COLUMN_ID));
+            itemView.setTag(data.get(position));
         }
 
         @Override
@@ -151,7 +147,7 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @OnClick(R.id.recyclerViewCard)
         public void buttonClicked() {
-            mCallBack.onItemClicked((Long) itemView.getTag());
+//            mCallBack.onItemClicked((Long) itemView.getTag());
         }
 
     }

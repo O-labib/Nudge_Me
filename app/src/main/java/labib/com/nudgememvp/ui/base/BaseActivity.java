@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -63,4 +64,8 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
     protected abstract void injectDependencies();
 
 
+    @Override
+    public void showMessage(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
 }

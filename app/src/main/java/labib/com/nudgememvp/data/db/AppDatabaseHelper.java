@@ -1,6 +1,6 @@
 package labib.com.nudgememvp.data.db;
 
-import android.database.Cursor;
+import java.util.ArrayList;
 
 public class AppDatabaseHelper implements DatabaseHelper {
 
@@ -11,12 +11,12 @@ public class AppDatabaseHelper implements DatabaseHelper {
     }
 
     @Override
-    public long insertData() {
-        return databaseOpenHelper.newNudge("omar", "labib", 15, 20);
+    public long insertData(String message, String place, double lat, double lon) {
+        return databaseOpenHelper.newNudge(message, place, lat, lon);
     }
 
     @Override
-    public Cursor getAllData() {
+    public ArrayList<Nudge> getAllData() {
         return databaseOpenHelper.getAllData();
     }
 

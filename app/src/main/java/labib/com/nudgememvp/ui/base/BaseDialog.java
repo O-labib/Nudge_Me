@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import labib.com.nudgememvp.di.activity.ActivityComponent;
+import labib.com.nudgememvp.ui.main.MainActivity;
 
 public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.support.v4.app.DialogFragment implements BaseMvpDialog {
 
@@ -39,6 +40,7 @@ public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.sup
             }
         }
     }
+
 
     @Nullable
     @Override
@@ -70,6 +72,13 @@ public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.sup
         return null;
     }
 
+    @Override
+    public void showMessage(String s) {
+        if (mActivity != null) {
+            mActivity.showMessage(s);
+        }
+    }
+
     public void show(FragmentManager fragmentManager, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         Fragment prevFragment = fragmentManager.findFragmentByTag(tag);
@@ -96,6 +105,7 @@ public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.sup
 
     public void dismissDialog(String tag) {
         dismiss();
+        ((MainActivity) getHostActivity()).onFragmentDetached(tag);
     }
 
     protected abstract int getContentResource();
@@ -103,5 +113,12 @@ public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.sup
     protected abstract void init(@Nullable Bundle state);
 
     protected abstract void injectDependencies();
+
+
+    public interface Callback {
+
+        //   void onFragmentAttached();
+        void onFragmentDetached(String tag);
+    }
 
 }
