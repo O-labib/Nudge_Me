@@ -2,10 +2,12 @@ package labib.com.nudgememvp.ui.main;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -88,6 +90,7 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     void swapCursor(Cursor cursor) {
         if (cursor != null) {
+            dataCursor.moveToPosition(2);
             dataCursor = null;
             dataCursor = cursor;
             notifyDataSetChanged();
@@ -114,6 +117,10 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @BindView(R.id.dateTV)
         TextView dateTV;
+
+
+        @BindView(R.id.recyclerViewCard)
+        CardView cardView;
 
         View itemView;
 

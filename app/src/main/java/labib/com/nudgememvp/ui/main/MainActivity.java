@@ -4,10 +4,13 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.database.Cursor;
-import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,10 +22,11 @@ import android.view.View;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import labib.com.nudgememvp.R;
 import labib.com.nudgememvp.ui.base.BaseActivity;
 
-public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, Adapter.Callback {
+public class MainActivity extends BaseActivity<MainContract.Presenter> implements MainContract.View, Adapter.Callback, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -30,9 +34,16 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     @BindView(R.id.newNudgeFAB)
     FloatingActionButton newNudgeFAB;
 
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+
     @Inject
     Adapter adapter;
 
+    @Inject
+    FragmentManager fragmentManager;
+
+    ItemTouchHelper.SimpleCallback recyclerItemTouchHelper;
 
     // wire the menu file
     @Override
@@ -73,27 +84,10 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     protected void init(@Nullable Bundle state) {
         getPresenter().queryInitialData();
 
+        recyclerItemTouchHelper =
+                new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(recyclerItemTouchHelper).attachToRecyclerView(recyclerView);
 
-        // handle recyclerView item swipe
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-
-
-            }
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                ((Adapter.ViewHolder)viewHolder).
-            }
-        }
-        ).attachToRecyclerView(recyclerView);
 
     }
 
@@ -102,9 +96,14 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         getComponent().inject(this);
     }
 
-    public void test(View view) {
+
+    @OnClick(R.id.newNudgeFAB)
+    public void newNudge() {
+//        InputFragment.newInstance().show(fragmentManager);
         getPresenter().insertData();
+
     }
+
 
     @Override
     public void initRecyclerView(Cursor cursor) {
@@ -138,5 +137,33 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
     }
 
 
+    @Override
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, int position) {
 
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "has removed", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // undo is selected, restore the deleted item
+                getPresenter().queryData();
+            }
+        });
+
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                //         getPresenter().deleteOne((Long) viewHolder.itemView.getTag());
+
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+
+            }
+        });
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
+
+    }
 }
