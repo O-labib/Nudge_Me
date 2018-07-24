@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import labib.com.nudgememvp.App;
 import labib.com.nudgememvp.data.DataManager;
-import labib.com.nudgememvp.ui.main.MainActivity;
 
 public class NotifReciever extends BroadcastReceiver {
 
