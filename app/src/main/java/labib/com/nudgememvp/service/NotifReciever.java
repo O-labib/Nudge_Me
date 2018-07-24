@@ -26,7 +26,6 @@ public class NotifReciever extends BroadcastReceiver {
 
             long nudgeId = intent.getLongExtra("nudgeId", 0);
             dataManager.deleteSingleNudge(nudgeId);
-            ((MainActivity)context).onRestart();
             notificationManager.cancel((int) nudgeId);
         }
 
