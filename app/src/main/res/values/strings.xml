@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Nudge Me Mvp</string>
+    <string name="app_name">Nudge Me</string>
     <string name="messageHeader">Message:</string>
     <string name="placeHeader">at</string>
     <string name="menu_clear_all">Clear All</string>
