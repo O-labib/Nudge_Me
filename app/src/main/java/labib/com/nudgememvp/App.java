@@ -1,6 +1,7 @@
 package labib.com.nudgememvp;
 
 import android.app.Application;
+import android.content.Context;
 
 import javax.inject.Inject;
 
@@ -14,6 +15,7 @@ public class App extends Application {
 
     @Inject
     DataManager dataManager;
+
 
     static ApplicationComponent component;
 
@@ -31,4 +33,6 @@ public class App extends Application {
     public static ApplicationComponent getApplicationComponent() {
         return component;
     }
+
+
 }

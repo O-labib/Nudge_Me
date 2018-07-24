@@ -1,8 +1,11 @@
 package labib.com.nudgememvp.ui.base;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -68,4 +71,6 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
     public void showMessage(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
+
+
 }

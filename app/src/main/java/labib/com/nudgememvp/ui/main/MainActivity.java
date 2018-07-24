@@ -1,15 +1,18 @@
 package labib.com.nudgememvp.ui.main;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -27,13 +30,15 @@ import butterknife.OnClick;
 import labib.com.nudgememvp.Logy;
 import labib.com.nudgememvp.R;
 import labib.com.nudgememvp.data.db.Nudge;
+import labib.com.nudgememvp.service.LocationService;
 import labib.com.nudgememvp.ui.base.BaseActivity;
-import labib.com.nudgememvp.ui.base.BaseDialog;
-import labib.com.nudgememvp.ui.main.inputFragment.InputFragment;
+import labib.com.nudgememvp.ui.input.InputActivity;
+import labib.com.nudgememvp.utils.CommonUtils;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter> implements
-        MainContract.View, Adapter.Callback, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,BaseDialog.Callback {
+        MainContract.View, Adapter.Callback, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
+    private static final int PERMISSION_RC = 700;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
@@ -45,9 +50,6 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @Inject
     Adapter adapter;
-
-    @Inject
-    FragmentManager fragmentManager;
 
     Snackbar snackbar;
     ItemTouchHelper.SimpleCallback recyclerItemTouchHelper;
@@ -67,18 +69,19 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
             case R.id.clear:
                 getPresenter().clearData();
                 break;
-            case R.id.settings:
-
-                break;
             case R.id.activateService:
+                getPresenter().prepareBackgroundService();
                 break;
             case R.id.dectivateService:
+                LocationService.stop(this);
                 break;
             case R.id.showStatus:
+                getPresenter().showServiceStatus();
                 break;
         }
         return true;
     }
+
 
     @Override
     protected int getContentResource() {
@@ -92,8 +95,12 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         recyclerItemTouchHelper =
                 new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(recyclerItemTouchHelper).attachToRecyclerView(recyclerView);
+    }
 
-
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        getPresenter().queryData();
     }
 
     @Override
@@ -104,9 +111,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @OnClick(R.id.newNudgeFAB)
     public void newNudge() {
-        InputFragment.newInstance().show(fragmentManager);
-        //   getPresenter().insertData();
-
+        startActivity(InputActivity.getStartIntent(this));
     }
 
 
@@ -123,14 +128,13 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
         adapter.swapData(data);
     }
 
-
     @Override
-    public void onItemClicked(long id) {
-        //  getPresenter().deleteOne(id);
+    public void onBackgroundServicePrepared() {
+        LocationService.start(this);
     }
 
     @Override
-    public void onEmptyClicked() {
+    public void onEmptyLayoutClicked() {
 
         // button popout
         PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.2f);
@@ -183,8 +187,35 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     }
 
+
     @Override
-    public void onFragmentDetached(String tag) {
-        getPresenter().queryData();
+    public boolean isLocationPermitted() {
+        return ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
+
+    @Override
+    public void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_RC);
+    }
+
+    @Override
+    public void newAlertDialog(String[] inputs, boolean cancelable, MainContract.AlertDialogListener listener) {
+        CommonUtils.newAlertDialog(this, inputs, cancelable, listener);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (PERMISSION_RC == requestCode) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getPresenter().prepareBackgroundService();
+            }
+        }
+    }
+
 }

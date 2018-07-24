@@ -10,16 +10,13 @@
         app:showAsAction="always" />
 
 
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_settings"
-        android:title="@string/menu_settings"
-        app:showAsAction="always" />
+
 
     <item
         android:id="@+id/showStatus"
         android:title="@string/menu_show_status"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_info"
+        app:showAsAction="always" />
     <item
         android:id="@+id/activateService"
         android:title="@string/menu_activate"

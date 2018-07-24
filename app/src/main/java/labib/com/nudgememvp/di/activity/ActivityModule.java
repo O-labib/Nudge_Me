@@ -2,26 +2,33 @@ package labib.com.nudgememvp.di.activity;
 
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 
 import dagger.Module;
 import dagger.Provides;
 import labib.com.nudgememvp.data.DataManager;
+import labib.com.nudgememvp.service.LocationService;
+import labib.com.nudgememvp.ui.input.InputContract;
+import labib.com.nudgememvp.ui.input.InputPresenter;
 import labib.com.nudgememvp.ui.main.Adapter;
 import labib.com.nudgememvp.ui.main.MainContract;
 import labib.com.nudgememvp.ui.main.MainPresenter;
-import labib.com.nudgememvp.ui.main.inputFragment.InputContract;
-import labib.com.nudgememvp.ui.main.inputFragment.InputPresenter;
+import labib.com.nudgememvp.ui.map.MapsContract;
+import labib.com.nudgememvp.ui.map.MapsPresenter;
 
 
 @Module
 public class ActivityModule {
 
-    private AppCompatActivity mActivity;
+    private FragmentActivity mActivity;
 
     public ActivityModule(Context context) {
-        mActivity = (AppCompatActivity) context;
+        try {
+            mActivity = (FragmentActivity) context;
+        } catch (Exception e) {
+
+        }
     }
 
     @Provides
@@ -41,9 +48,12 @@ public class ActivityModule {
         return new InputPresenter(dataManager);
     }
 
+
     @Provides
     @PerActivity
-    FragmentManager provideFragmentManager() {
-        return mActivity.getSupportFragmentManager();
+    MapsContract.Presenter provideMapsPresenter(DataManager dataManager) {
+        return new MapsPresenter(dataManager);
     }
+
+
 }

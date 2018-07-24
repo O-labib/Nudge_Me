@@ -36,7 +36,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/progressDialog"
         layout="@layout/layout_prgress_dialoge"
         android:visibility="gone" />
 

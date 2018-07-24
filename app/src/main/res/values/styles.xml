@@ -11,4 +11,14 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <style name="InputTextsStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+
+    <style name="SeekBarStyle" parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 </resources>

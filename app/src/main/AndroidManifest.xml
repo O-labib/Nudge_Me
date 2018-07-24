@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="labib.com.nudgememvp">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -21,17 +20,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
             android:name=".ui.map.MapsActivity"
-            android:theme="@style/MapTheme"></activity>
+            android:theme="@style/MapTheme" />
+        <activity android:name=".ui.input.InputActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <service
+            android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".service.NotifReciever"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="DELETE_ACTION"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

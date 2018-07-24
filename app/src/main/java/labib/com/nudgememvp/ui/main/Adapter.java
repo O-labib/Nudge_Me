@@ -94,9 +94,7 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public interface Callback {
-        void onItemClicked(long id);
-
-        void onEmptyClicked();
+        void onEmptyLayoutClicked();
     }
 
 
@@ -145,11 +143,6 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
             dateTV.setText("");
         }
 
-        @OnClick(R.id.recyclerViewCard)
-        public void buttonClicked() {
-//            mCallBack.onItemClicked((Long) itemView.getTag());
-        }
-
     }
 
     public class EmptyViewHolder extends BaseViewHolder {
@@ -168,7 +161,7 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @OnClick(R.id.recyclerViewEmptyCard)
         public void emptyClicked() {
-            mCallBack.onEmptyClicked();
+            mCallBack.onEmptyLayoutClicked();
         }
 
     }

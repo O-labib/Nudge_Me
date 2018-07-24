@@ -1,7 +1,5 @@
 package labib.com.nudgememvp.ui.main;
 
-import android.database.Cursor;
-
 import java.util.ArrayList;
 
 import labib.com.nudgememvp.data.db.Nudge;
@@ -15,11 +13,18 @@ public interface MainContract {
         void initRecyclerView(ArrayList<Nudge> nudges);
 
         void updateRecyclerView(ArrayList<Nudge> nudges);
+
+        void onBackgroundServicePrepared();
+
+        boolean isLocationPermitted();
+
+        void requestLocationPermission();
+
+        void newAlertDialog(String[] inputs, boolean cancelable, AlertDialogListener listener);
+
     }
 
     interface Presenter extends BaseMvpPresenter<View>{
-        void insertData();
-
         void queryData();
 
         void queryInitialData();
@@ -27,5 +32,15 @@ public interface MainContract {
         void clearData();
 
         void deleteOne(long id);
+
+        void showServiceStatus();
+
+        void prepareBackgroundService();
+    }
+
+    interface AlertDialogListener {
+        void onPositiveBtnClicked();
+
+        void onNegativeBtnClicked();
     }
 }

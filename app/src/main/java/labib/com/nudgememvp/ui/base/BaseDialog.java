@@ -105,7 +105,6 @@ public abstract class BaseDialog<T extends BaseMvpPresenter> extends android.sup
 
     public void dismissDialog(String tag) {
         dismiss();
-        ((MainActivity) getHostActivity()).onFragmentDetached(tag);
     }
 
     protected abstract int getContentResource();
