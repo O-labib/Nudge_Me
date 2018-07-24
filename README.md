@@ -54,5 +54,3 @@ Is a broadcast reciever to handle the click on notifications
 
 ![Alt text](/app/src/main/res/drawable/screen3.jpg?raw=true "MapsActivity")
 ![Alt text](/app/src/main/res/drawable/screen4.jpg?raw=true "MapsActivity")
-
-asdsd
