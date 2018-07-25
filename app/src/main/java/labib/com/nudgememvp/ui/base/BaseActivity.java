@@ -34,7 +34,7 @@ public abstract class BaseActivity<T extends BaseMvpPresenter> extends AppCompat
         ButterKnife.bind(this);
 
         activityComponent = DaggerActivityComponent.builder()
-                .applicationComponent(((App) getApplicationContext()).getApplicationComponent())
+                .applicationComponent(App.getApplicationComponent())
                 .activityModule(new ActivityModule(this)).build();
 
         injectDependencies();

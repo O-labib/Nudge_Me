@@ -21,7 +21,7 @@ public class NotifReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("DELETE_ACTION")) {
-            ((App) context.getApplicationContext()).getApplicationComponent().inject(this);
+            App.getApplicationComponent().inject(this);
 
             long nudgeId = intent.getLongExtra("nudgeId", 0);
             dataManager.deleteSingleNudge(nudgeId);

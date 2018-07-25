@@ -16,6 +16,7 @@ import labib.com.nudgememvp.data.DataManager;
 import labib.com.nudgememvp.data.db.Nudge;
 import labib.com.nudgememvp.di.service.DaggerServiceComponent;
 import labib.com.nudgememvp.di.service.ServiceComponent;
+import labib.com.nudgememvp.di.service.ServiceModule;
 import labib.com.nudgememvp.utils.CommonUtils;
 
 public class LocationService extends Service implements ServiceLocationListener {
@@ -46,7 +47,7 @@ public class LocationService extends Service implements ServiceLocationListener 
     public void onCreate() {
         super.onCreate();
         ServiceComponent component = DaggerServiceComponent.builder()
-                .applicationComponent(((App) getApplication()).getApplicationComponent())
+                .applicationComponent(App.getApplicationComponent())
                 .build();
         component.inject(this);
 
