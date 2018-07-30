@@ -1,4 +1,6 @@
 # Nudge Me
+![Alt text](/app/src/main/res/mipmap-xxhdpi/ic_launcher.png?raw=true "MainActivity")
+
 
 ## App Description
 Nudge-me is a location-based reminder, you can speacify a patricular location from the map, at which a notification can prompt.
