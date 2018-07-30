@@ -149,10 +149,11 @@ public class MainActivity extends BaseActivity<MainContract.Presenter> implement
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, final int position) {
+        if (viewHolder.itemView.getTag()==null){
+            return;
+        }
         if (snackbar != null && snackbar.isShown()) {
-            new Logy("Shown");
             snackbar.dismiss();
-            new Logy("dismiss upp");
         }
 
         new Logy("here up ----");

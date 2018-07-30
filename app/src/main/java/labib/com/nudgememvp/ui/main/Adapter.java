@@ -135,6 +135,8 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
             itemView.setTag(data.get(position));
         }
 
+
+
         @Override
         protected void clear() {
             nudgeTV.setText("");
@@ -148,7 +150,7 @@ public class Adapter extends RecyclerView.Adapter<BaseViewHolder> {
     public class EmptyViewHolder extends BaseViewHolder {
 
 
-        public EmptyViewHolder(View itemView) {
+         EmptyViewHolder(View itemView) {
             super(itemView);
 
         }

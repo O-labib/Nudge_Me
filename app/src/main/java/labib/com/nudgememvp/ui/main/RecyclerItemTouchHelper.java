@@ -21,7 +21,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-        if (viewHolder != null) {
+        if (viewHolder != null && viewHolder.itemView.getTag() != null) {
             final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
 
             getDefaultUIUtil().onSelected(foregroundView);
@@ -32,24 +32,32 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+        if (viewHolder.itemView.getTag() != null) {
+            final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+                    actionState, isCurrentlyActive);
+        }
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
-        getDefaultUIUtil().clearView(foregroundView);
+
+        if (viewHolder.itemView.getTag() != null) {
+            final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView,
                             RecyclerView.ViewHolder viewHolder, float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
-        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+
+        if (viewHolder.itemView.getTag() != null) {
+            final View foregroundView = ((Adapter.ViewHolder) viewHolder).cardView;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+                    actionState, isCurrentlyActive);
+        }
     }
 
     @Override
